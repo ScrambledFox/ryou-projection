@@ -2,19 +2,21 @@ import java.util.function.*;
 
 class Device {
   int TTL = 1000;
+  int TTC = 1000;
   String name;
   int id;
   ArrayList<DeviceEvent> events;
 
   boolean active = false;
   float tx, ty, tz, rx, ry, rz;
-  long ts;
+  long ts, tc;
   
   public Device (String _name, int _id, ArrayList<DeviceEvent> _events) {
       this.name = _name;
       this.id = _id;
       this.events = _events;
       this.ts = 0;
+      this.tc = 0;
   }
   
   public Device(){
@@ -38,14 +40,34 @@ class Device {
     
     this.active = true;
   }
+
+  Device otherTryConnect;
+  public void setConnectionReqStart (Device other){
+    println("Setting connection request start");
+    this.otherTryConnect = other;
+    this.tc = millis();
+  }
+
+  public boolean isInRange (Device other) {
+    float dx = this.tx - other.tx;
+    float dy = this.ty - other.ty;
+    float dz = this.tz - other.tz;
+    float dist = sqrt(dx*dx + dy*dy + dz*dz);
+    return dist < 200;
+  }
   
   public void tick(){
-    if (!this.active) {
-      println("test");
+    if (this.otherTryConnect != null && (millis() - this.tc) > this.TTC){
+      println("Setting connection request end");
+      this.events.get(0).connect(this.otherTryConnect, this.otherTryConnect.events.get(0).name);
+      this.otherTryConnect = null;
     }
+    
     if (!this.active && (millis() - this.ts) > this.TTL){
       this.clearConnections();
     }
+
+    
   }
 
   public void clearConnections () {

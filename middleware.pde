@@ -10,7 +10,6 @@ class Middleware {
 
     // TEST CONNECTIONS
     devices.get(0).getEventWithName("OnBlueButtonDown").connect(devices.get(2), "TurnOff");
-    
     devices.get(1).getEventWithName("OnChange").connect(devices.get(2), "TurnOn");
 
   }
@@ -46,6 +45,16 @@ class Middleware {
   public void update(){
     for (Device device: devices){
       device.tick();
+
+      for (Device other: devices) {
+        if (device == other) continue;
+
+        // Check if device is in range
+        if (!device.isInRange(other)) continue;
+
+        // Activate connection timer
+        device.setConnectionReqStart(other);
+      }
     }
   }
 
