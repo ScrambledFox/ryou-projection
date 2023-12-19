@@ -26,6 +26,10 @@ class Device {
     this.rz = rz;
   }
 
+  public PVector get2dPosition () {
+    return img2screen(transformPoint(new PVector(tx, ty, tz), homography));
+  }
+
   public ArrayList<String> getTopics() {
     ArrayList<String> topics = new ArrayList<String>();
     for (DeviceEvent event : events) {
