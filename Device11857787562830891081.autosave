@@ -46,10 +46,11 @@ class Device {
       float eventD = 150/2;
       float eventR = eventD/2;
       float eventAngle = 0;
+      float eventAngleStep = TWO_PI/this.events.size();
       float eventX = eventR * cos(eventAngle);
       float eventY = eventR * sin(eventAngle);
       event.nodePosition = new PVector(eventX, eventY);
-      eventAngle += TWO_PI/this.events.size();
+      eventAngle += eventAngleStep;
     }
   }
 
@@ -148,10 +149,6 @@ class DeviceEvent {
   public void connect (Device other, String method) {
     println("Connecting event " + name + "with the following event with name " + other.name + " and method "+  method );
     connections.add(new Connection(this.device, other, method));
-  }
-
-  public float getDistance ( DeviceEvent other ) {
-    return this.nodePosition.dist(other.nodePosition);
   }
   
   public void clearConnections() {
