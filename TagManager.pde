@@ -19,6 +19,16 @@ class TagManager {
     }
   }
 
+  Tag getWithId(int id) {
+    for (Tag t : tags) {
+      if (t.id == id) {
+        return t;
+      }
+    }
+    
+    return null;
+  }
+
   void set(int id, float tx, float ty, float tz, float rx, float ry, float rz, PVector[] corners) {
     //tags[id].set(tx, ty, tz, rx-globalR.x, ry-globalR.y, rz-globalR.z, corners);
     tags[id].set(tx, ty, tz, rx, ry, rz, corners);
