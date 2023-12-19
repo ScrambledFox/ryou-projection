@@ -43,6 +43,8 @@ class Device {
 
   Device otherTryConnect;
   public void setConnectionReqStart (Device other){
+    if (otherTryConnect != null) return;
+    
     println("Setting connection request start");
     this.otherTryConnect = other;
     this.tc = millis();
@@ -53,7 +55,7 @@ class Device {
     float dy = this.ty - other.ty;
     float dz = this.tz - other.tz;
     float dist = sqrt(dx*dx + dy*dy + dz*dz);
-    return dist < 200;
+    return dist < 0.1f;
   }
   
   public void tick(){

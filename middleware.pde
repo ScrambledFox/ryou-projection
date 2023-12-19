@@ -47,7 +47,7 @@ class Middleware {
       device.tick();
 
       for (Device other: devices) {
-        if (device == other) continue;
+        if (device.name == other.name) continue;
 
         // Check if device is in range
         if (!device.isInRange(other)) continue;

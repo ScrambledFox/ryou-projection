@@ -136,8 +136,8 @@ class TagManager {
         float angle2D = t.rz-globalR.z;
         PVector loc2D = img2screen(transformPoint(new PVector(t.tx, t.ty, t.tz), homography));
         float distance = distancePointToPlane(new PVector(t.tx, t.ty, t.tz), planePoints);
-        if(distance<touchThreshold) drawTagSimple(t.id, loc2D, angle2D, tagD, color(100)); //example visualization
-        else drawTagSimple(t.id, loc2D, angle2D, tagD, color(100,100));
+        if(distance<touchThreshold) drawTagSimple(t.id, t.device, loc2D, angle2D, tagD, color(100)); //example visualization
+        else drawTagSimple(t.id, t.device, loc2D, angle2D, tagD, color(100,100));
       }
     }
     //for (Bundle b : tagBundles) {
@@ -152,7 +152,7 @@ class TagManager {
     //}
   }
 
-  void drawTagSimple(int id, PVector loc2D, float angle2D, float D, color c) {
+  void drawTagSimple(int id, Device device, PVector loc2D, float angle2D, float D, color c) {
     float R = D/2;
     pushMatrix();
     pushStyle();
@@ -168,7 +168,7 @@ class TagManager {
     noStroke();
     textSize(R);
     textAlign(CENTER, CENTER);
-    text(id, 0, -D);
+    text(device.name, 0, -D);
     popStyle();
     popMatrix();
   }
