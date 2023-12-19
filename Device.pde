@@ -41,6 +41,19 @@ class Device {
     this.active = true;
   }
 
+  public void calculateNodePosition () {
+    for (DeviceEvent event : events) {
+      float eventD = D/2;
+      float eventR = eventD/2;
+      float eventAngle = 0;
+      float eventAngleStep = TWO_PI/device.events.size();
+      float eventX = eventR * cos(eventAngle);
+      float eventY = eventR * sin(eventAngle);
+      event.nodePosition = new PVector(eventX, eventY);
+      eventAngle += eventAngleStep;
+    }
+  }
+
   Device otherTryConnect;
   public void setConnectionReqStart (Device other){
     if (otherTryConnect != null) return;
@@ -120,6 +133,7 @@ class DeviceEvent {
   Device device;
   String name;
   String type;
+  PVector nodePosition;
 
   ArrayList<Connection> connections;
 
@@ -129,6 +143,7 @@ class DeviceEvent {
     this.type = _type;
 
     this.connections = new ArrayList<Connection>();
+    this.nodePosition = new PVector(0, 0);
   }
 
   public void connect (Device other, String method) {

@@ -169,6 +169,25 @@ class TagManager {
     textSize(R);
     textAlign(CENTER, CENTER);
     text(device.name, 0, -D);
+
+    // Draw events under the tag
+    if (device.events.size() > 0) {
+      for (DeviceEvent e : device.events) {
+        pushMatrix();
+        pushStyle();
+        translate(e.nodePosition.x, e.nodePosition.y);
+        fill(255);
+        noStroke();
+        ellipse(0, 0, D/2, D/2);
+        fill(0);
+        textSize(D/2 / 10);
+        textAlign(CENTER, CENTER);
+        text(e.name, 0, 0);
+        popStyle();
+        popMatrix();
+      }
+    }
+
     popStyle();
     popMatrix();
   }
