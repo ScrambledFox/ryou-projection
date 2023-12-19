@@ -24,6 +24,7 @@ class Tag {
   void checkActive() {
     if (this.active && (millis()-this.ts)>this.TTL) {
       this.active = false;
+      this.device.setAbsent();
       tagAbsent2D(this.id, this.tx, this.ty, this.tz, this.rz);
       tagAbsent3D(this.id, this.tx, this.ty, this.tz, this.rx, this.ry, this.rz);
     }

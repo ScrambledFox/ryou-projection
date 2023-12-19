@@ -15,6 +15,7 @@ class Connection {
 
     public void handle (){
         to.trigger(method);
+        this.addDataUnit();
     }
 
     public void addDataUnit(){
@@ -25,14 +26,16 @@ class Connection {
         ArrayList<Float> newDataUnits = new ArrayList<Float>();
         for (int i = 0; i < dataUnits.size(); i++){
             float dataUnit = dataUnits.get(i);
-            dataUnit -= 0.01;
+            dataUnit += 0.01;
 
-            if (dataUnit > 0) newDataUnits.add(dataUnit);
+            if (dataUnit < 1) newDataUnits.add(dataUnit);
         }
         this.dataUnits = newDataUnits;
     }
 
     public void showDataStream(){
+        tick();
+        
         pushMatrix();
         pushStyle();
         stroke(255, 0, 0);

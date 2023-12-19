@@ -1,20 +1,29 @@
 import java.util.function.*;
 
 class Device {
+  int TTL = 2000;
   String name;
   int id;
   ArrayList<DeviceEvent> events;
 
+  boolean active = false;
   float tx, ty, tz, rx, ry, rz;
+  long ts;
   
   public Device (String _name, int _id, ArrayList<DeviceEvent> _events) {
       this.name = _name;
       this.id = _id;
       this.events = _events;
+      this.ts = 0;
   }
   
   public Device(){
     // super("", 0, new ArrayList<DeviceEvent>());
+  }
+  
+  public void setAbsent(){
+    this.active = false;
+    this.ts = millis();
   }
 
   public void updatePosition (float tx, float ty, float tz, float rx, float ry, float rz) {
@@ -24,6 +33,20 @@ class Device {
     this.rx = rx;
     this.ry = ry;
     this.rz = rz;
+    
+    this.active = true;
+  }
+  
+  public void tick(){
+    if (!this.active && millis() - this.ts > this.TTL){
+      this.clearConnections();
+    }
+  }
+
+  public void clearConnections () {
+    for(DeviceEvent event: this.events){
+      event.clearConnections();
+    }    
   }
 
   public PVector get2dPosition () {
@@ -82,6 +105,10 @@ class DeviceEvent {
   public void connect (Device other, String method) {
     println("Connecting event " + name + "with the following event with name " + other.name + " and method "+  method );
     connections.add(new Connection(this.device, other, method));
+  }
+  
+  public void clearConnections() {
+    connections = new ArrayList<Connection>();
   }
 
   public void trigger () {

@@ -9,8 +9,9 @@ class Middleware {
     subscribeToTopics();
 
     // TEST CONNECTIONS
-    devices.get(0).getEventWithName("OnBlueButtonDown").connect(devices.get(2), "TurnOn");
-    devices.get(0).getEventWithName("OnBlueButtonUp").connect(devices.get(2), "TurnOff");
+    devices.get(0).getEventWithName("OnBlueButtonDown").connect(devices.get(2), "TurnOff");
+    
+    devices.get(1).getEventWithName("OnChange").connect(devices.get(2), "TurnOn");
 
   }
 
