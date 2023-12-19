@@ -39,15 +39,16 @@ class Device {
     this.rz = rz;
     
     this.active = true;
+    calculateNodePosition();
   }
 
   public void calculateNodePosition () {
+    float eventAngle = 0;
     for (DeviceEvent event : events) {
       float eventD = 150/2;
       float eventR = eventD/2;
-      float eventAngle = 0;
-      float eventX = eventR * cos(eventAngle);
-      float eventY = eventR * sin(eventAngle);
+      float eventX = eventR * 3.5 * cos(eventAngle);
+      float eventY = eventR * 3.5 * sin(eventAngle);
       event.nodePosition = new PVector(eventX, eventY);
       eventAngle += TWO_PI/this.events.size();
     }
