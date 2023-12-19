@@ -1,0 +1,22 @@
+// MQTT Handler
+
+void initMqtt(){
+   mqtt = new MQTTClient(this);
+   mqtt.connect("mqtt://localhost", "ryou-vis");
+}
+
+void clientConnected () {
+  println("MQTT Connected!");
+  
+  mqtt.subscribe("/hello");
+}
+
+void messageReceived(String topic, byte[] payload){
+  println("new message: "+ topic + " - " + new String(payload));
+  
+
+}
+
+void connectionLost(){
+  println("MQTT Connection Lost!");
+}
