@@ -3,7 +3,7 @@ class TagManager {
   ArrayList<Bundle> tagBundles;
   PMatrix3D R1;
   PMatrix3D R2;
-  int TAG_D = 300;
+  int TAG_D = 150;
   int BUNDLE_D = 300;
   
   TagManager(int n, ArrayList b_ids, ArrayList b_offs) {
@@ -139,16 +139,19 @@ class TagManager {
     float R = D/2;
     pushMatrix();
     pushStyle();
-    fill(c);
+    noFill();
     strokeWeight(5);
-    stroke(0);
-    ellipse(loc2D.x, loc2D.y, D, D);
-    line(loc2D.x, loc2D.y, loc2D.x + R * (cos(angle2D)), loc2D.y + R * (sin(angle2D)));
+    stroke(255);
+    //ellipse(loc2D.x, loc2D.y, D, D);
+    translate(loc2D.x, loc2D.y);
+    rotate(angle2D);
+    rect(-D/2, -D/2, D, D);
+    //line(R * (cos(angle2D)), R * (sin(angle2D)), R * 1.25 * (cos(angle2D)), R * 1.25 * (sin(angle2D)));
     fill(255);
     noStroke();
     textSize(R);
     textAlign(CENTER, CENTER);
-    text(id, 0, loc2D.y);
+    text(id, 0, -D);
     popStyle();
     popMatrix();
   }

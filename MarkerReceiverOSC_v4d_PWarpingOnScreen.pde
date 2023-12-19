@@ -41,7 +41,7 @@ void setup() {
 void draw() {
   tm.update();
   mw.update();
-  homographyMatrixCalculated = true;
+  //homographyMatrixCalculated = true;
   if (!homographyMatrixCalculated) {
     background(100);
     drawCalibImage();
