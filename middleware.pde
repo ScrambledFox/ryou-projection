@@ -42,10 +42,16 @@ class Middleware {
     return null;
   }
 
-  void update(){}
+  public void update(){}
 
-}
+  public void draw(){
+    for (Device device: devices){
+      for (DeviceEvent event: device.events){
+        for (Connection con: event.connections) {
+          con.showDataStream();
+        }
+      }
+    }
+  }
 
-void helloWorld(){
-  println("Hello World");
 }

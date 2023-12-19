@@ -55,6 +55,7 @@ void draw() {
     background(10);
     drawCanvas();
     tm.display2D(homography);
+    mw.draw();
   }
 }
 
