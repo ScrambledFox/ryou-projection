@@ -153,6 +153,10 @@ class TagManager {
   }
 
   void drawTagSimple(int id, Device device, PVector loc2D, float angle2D, float D, color c) {
+    if (device == null) return;
+    
+    PVector pos = device.get2dPosition();
+    
     float R = D/2;
     pushMatrix();
     pushStyle();
@@ -166,9 +170,11 @@ class TagManager {
     //line(R * (cos(angle2D)), R * (sin(angle2D)), R * 1.25 * (cos(angle2D)), R * 1.25 * (sin(angle2D)));
     fill(255);
     noStroke();
-    textSize(R);
+    textSize(R / 3);
     textAlign(CENTER, CENTER);
-    text(device.name, 0, -D);
+    text(device.name, D / 2, -D / 2 - 20);
+    textSize(R / 5);
+    //text(nf(pos.x,0,  1) + ", " + nf(pos.y, 0, 1), 0, +D / 2 + 10);
 
     // Draw events under the tag
     if (device.events.size() > 0) {
@@ -180,9 +186,13 @@ class TagManager {
         noStroke();
         ellipse(0, 0, D/2, D/2);
         fill(0);
-        textSize(D/2 / 10);
+        textSize(D / 2 / 8);
         textAlign(CENTER, CENTER);
         text(e.name, 0, 0);
+        textSize(D / 10);
+        fill(255,0,255);
+        //text(nf(e.globalPosition.x, 0, 1) + ", "+ nf(e.globalPosition.y, 0, 1), 0, 10);
+        //text(nf(e.nodePosition.x, 0, 1) + ", "+ nf(e.nodePosition.y, 0, 1), 0, 25);
         popStyle();
         popMatrix();
       }

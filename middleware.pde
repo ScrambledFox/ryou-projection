@@ -9,8 +9,8 @@ class Middleware {
     subscribeToTopics();
 
     // TEST CONNECTIONS
-    devices.get(0).getEventWithName("OnBlueButtonDown").connect(devices.get(2), "TurnOff");
-    devices.get(1).getEventWithName("OnChange").connect(devices.get(2), "TurnOn");
+    //devices.get(0).getEventWithName("OnBlueButtonDown").connect(devices.get(2), "TurnOff");
+    //devices.get(1).getEventWithName("OnChange").connect(devices.get(2), "TurnOn");
 
   }
 
@@ -47,31 +47,29 @@ class Middleware {
       device.tick();
 
       for (Device other: devices) {
-        if (device.name == other.name) continue;
+        if (device.name.equals(other.name)) continue;
 
         // Check if device is in range
         if (!device.isInRange(other)) continue;
 
+
         // Check which nodes are near.
         for (DeviceEvent ourNode : device.events){
+          if (ourNode.type.equals("input")) continue;
+          
           for (DeviceEvent otherNode : other.events) {
-            if (ourNode.type == otherNode.type) continue;
+            if (otherNode.type.equals("output")) continue;
+            
+              for (Connection con: ourNode.connections) {
+                if (ourNode.name.equals(otherNode.name)) break;
+              }
               
               // Calculate distance between nodes
               float distance = ourNode.getDistance(otherNode);
-              if (distance > 100) continue;
-
-              // Check if connection already exists
-              boolean connectionExists = false;
-              for (Connection con : ourNode.connections) {
-                if (con.to.name == otherNode.name) {
-                  connectionExists = true;
-                  continue;
-                }
-              }
+              if (distance > 50) continue;
               
               // Activate connection timer
-              device.setConnectionReqStart(other);
+              device.setConnectionReqStart(ourNode, other, otherNode);
           }
         }
       }

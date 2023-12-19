@@ -3,12 +3,16 @@ class Connection {
     String id;
     Device from;
     Device to;
+    DeviceEvent fromEvent;
+    DeviceEvent toEvent;
     String method;
     ArrayList<Float> dataUnits;
 
-    public Connection(Device from, Device to, String method){
+    public Connection(Device from, Device to, DeviceEvent fromEvent, DeviceEvent toEvent, String method){
         this.from = from;
         this.to = to;
+        this.fromEvent = fromEvent;
+        this.toEvent = toEvent;
         this.method = method;
         this.dataUnits = new ArrayList<Float>();
     }
@@ -34,6 +38,8 @@ class Connection {
     }
 
     public void showDataStream(){
+        if (fromEvent == null || toEvent == null) return;
+      
         tick();
         
         pushMatrix();

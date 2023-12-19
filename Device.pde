@@ -1,7 +1,7 @@
 import java.util.function.*;
 
 class Device {
-  int TTL = 1000;
+  int TTL = 500;
   int TTC = 1000;
   String name;
   int id;
@@ -39,43 +39,55 @@ class Device {
     this.rz = rz;
     
     this.active = true;
-    calculateNodePosition();
+    calculateNodePosition(this.get2dPosition());
   }
 
-  public void calculateNodePosition () {
+  public void calculateNodePosition (PVector local2d) {
     float eventAngle = 0;
+    float globalAngle = this.getAngle2d();
     for (DeviceEvent event : events) {
       float eventD = 150/2;
       float eventR = eventD/2;
       float eventX = eventR * 3.5 * cos(eventAngle);
       float eventY = eventR * 3.5 * sin(eventAngle);
       event.nodePosition = new PVector(eventX, eventY);
+      
+      float globalX = local2d.x +  eventR * 3.5 * cos(globalAngle + eventAngle);
+      float globalY = local2d.y +  eventR * 3.5 * sin(globalAngle + eventAngle);
+      
+      event.globalPosition = new PVector(globalX, globalY);
       eventAngle += TWO_PI/this.events.size();
     }
   }
 
+  DeviceEvent ourEvent;
   Device otherTryConnect;
-  public void setConnectionReqStart (Device other){
+  DeviceEvent otherEvent;
+  public void setConnectionReqStart (DeviceEvent ourEvent, Device other, DeviceEvent otherEvent){
     if (otherTryConnect != null) return;
     
-    println("Setting connection request start");
+    println("TRY CON: " + ourEvent.name + " -> "+ otherEvent.name);
+    
+    println("------------------------------------------------------------ Setting connection request start");
+    this.ourEvent = ourEvent;
     this.otherTryConnect = other;
+    this.otherEvent = otherEvent;
     this.tc = millis();
   }
 
   public boolean isInRange (Device other) {
-    float dx = this.tx - other.tx;
-    float dy = this.ty - other.ty;
-    float dz = this.tz - other.tz;
-    float dist = sqrt(dx*dx + dy*dy + dz*dz);
-    return dist < 0.1f;
+    PVector me = this.get2dPosition();
+    PVector them = other.get2dPosition();
+    return them.dist(me) < 450;
   }
   
   public void tick(){
     if (this.otherTryConnect != null && (millis() - this.tc) > this.TTC){
-      println("Setting connection request end");
-      this.events.get(0).connect(this.otherTryConnect, this.otherTryConnect.events.get(0).name);
+      println("------------------------------------------------------------- Setting connection request end");
+      this.ourEvent.connect(this.otherTryConnect, this.otherEvent.name);
+      this.ourEvent = null;
       this.otherTryConnect = null;
+      this.otherEvent = null;
     }
     
     if (!this.active && (millis() - this.ts) > this.TTL){
@@ -93,6 +105,10 @@ class Device {
 
   public PVector get2dPosition () {
     return img2screen(transformPoint(new PVector(tx, ty, tz), homography));
+  }
+  
+  public float getAngle2d (){
+    return this.rz-globalR.z;
   }
 
   public ArrayList<String> getTopics() {
@@ -134,6 +150,7 @@ class DeviceEvent {
   String name;
   String type;
   PVector nodePosition;
+  PVector globalPosition;
 
   ArrayList<Connection> connections;
 
@@ -144,15 +161,17 @@ class DeviceEvent {
 
     this.connections = new ArrayList<Connection>();
     this.nodePosition = new PVector(0, 0);
-  }
+    this.globalPosition = new PVector(0, 0);
+}
 
   public void connect (Device other, String method) {
-    println("Connecting event " + name + "with the following event with name " + other.name + " and method "+  method );
-    connections.add(new Connection(this.device, other, method));
+    println("Connecting event " + name + " with the following event with name " + other.name + " and method "+  method );
+    DeviceEvent otherEvent = other.getEventWithName(method);
+    connections.add(new Connection(this.device, other, this, otherEvent, method));
   }
 
   public float getDistance ( DeviceEvent other ) {
-    return this.nodePosition.dist(other.nodePosition);
+    return this.globalPosition.dist(other.globalPosition);
   }
   
   public void clearConnections() {

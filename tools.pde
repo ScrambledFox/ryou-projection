@@ -134,6 +134,9 @@ PVector transformPoint(PVector point, SimpleMatrix homography) {
   float y = point.y;
   float z = point.z;
 
+  if (homography == null) return new PVector(-100, -100);
+  if (point == null ) return new PVector(-100, -100);
+
   SimpleMatrix result = homography.mult(new SimpleMatrix(new double[][] {{x}, {y}, {z}}));
 
   float w = (float) result.get(2, 0);
