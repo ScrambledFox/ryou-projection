@@ -1,7 +1,7 @@
 import java.util.function.*;
 
 class Device {
-  int TTL = 2000;
+  int TTL = 1000;
   String name;
   int id;
   ArrayList<DeviceEvent> events;
@@ -22,6 +22,8 @@ class Device {
   }
   
   public void setAbsent(){
+    if (!this.active) return;
+    
     this.active = false;
     this.ts = millis();
   }
@@ -38,7 +40,10 @@ class Device {
   }
   
   public void tick(){
-    if (!this.active && millis() - this.ts > this.TTL){
+    if (!this.active) {
+      println("test");
+    }
+    if (!this.active && (millis() - this.ts) > this.TTL){
       this.clearConnections();
     }
   }

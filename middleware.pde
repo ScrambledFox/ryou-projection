@@ -43,7 +43,11 @@ class Middleware {
     return null;
   }
 
-  public void update(){}
+  public void update(){
+    for (Device device: devices){
+      device.tick();
+    }
+  }
 
   public void draw(){
     for (Device device: devices){

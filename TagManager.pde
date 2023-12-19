@@ -37,6 +37,13 @@ class TagManager {
   void update() {
     for (Tag t : this.tags) {
       t.checkActive();
+      if (t.device != null){
+        if (t.active) {
+          t.device.active = true;
+        } else { 
+          t.device.setAbsent();
+        }
+      }
     }
     for (Bundle b : this.tagBundles) {
       ArrayList<Tag> activeTags = new ArrayList<Tag>();
@@ -133,16 +140,16 @@ class TagManager {
         else drawTagSimple(t.id, loc2D, angle2D, tagD, color(100,100));
       }
     }
-    for (Bundle b : tagBundles) {
-      if (b.active) {
-        float bundleD = BUNDLE_D;
-        float angle2D = b.rz-globalR.z;
-        PVector loc2D = img2screen(transformPoint(new PVector(b.tx, b.ty, b.tz), homography));
-        float distance = distancePointToPlane(new PVector(b.tx, b.ty, b.tz), planePoints);
-        if(distance<touchThreshold) drawTagSimple(b.ids.get(0), loc2D, angle2D, bundleD, color(0, 127, 255)); //example visualization
-        else drawTagSimple(b.ids.get(0), loc2D, angle2D, bundleD, color(0, 127, 255, 100)); //example visualization
-      }
-    }
+    //for (Bundle b : tagBundles) {
+    //  if (b.active) {
+    //    float bundleD = BUNDLE_D;
+    //    float angle2D = b.rz-globalR.z;
+    //    PVector loc2D = img2screen(transformPoint(new PVector(b.tx, b.ty, b.tz), homography));
+    //    float distance = distancePointToPlane(new PVector(b.tx, b.ty, b.tz), planePoints);
+    //    if(distance<touchThreshold) drawTagSimple(b.ids.get(0), loc2D, angle2D, bundleD, color(0, 127, 255)); //example visualization
+    //    else drawTagSimple(b.ids.get(0), loc2D, angle2D, bundleD, color(0, 127, 255, 100)); //example visualization
+    //  }
+    //}
   }
 
   void drawTagSimple(int id, PVector loc2D, float angle2D, float D, color c) {
